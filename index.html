@@ -1,0 +1,989 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>PM NEXT GEN</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <style>
+        /* التصميم العام */
+        :root {
+            --primary: #2c3e50;
+            --secondary: #3498db;
+            --success: #27ae60;
+            --info: #3498db;
+            --danger: #e74c3c;
+            --light: #f8f9fa;
+            --dark: #2c3e50;
+        }
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            font-family: 'Tajawal', sans-serif;
+        }
+        body {
+            background: var(--light);
+            padding-top: 70px;
+        }
+        /* شريط التنقل العلوي */
+        .nav-bar {
+            position: fixed;
+            top: 0;
+            width: 100%;
+            background: var(--primary);
+            padding: 1rem;
+            display: flex;
+            justify-content: space-around;
+            z-index: 1000;
+        }
+        .nav-btn {
+            color: white;
+            padding: 0.5rem 1rem;
+            border-radius: 5px;
+            cursor: pointer;
+            transition: 0.3s;
+        }
+        .nav-btn:hover {
+            background: var(--secondary);
+        }
+        /* الصفحة الرئيسية */
+        .home-page {
+            padding: 2rem;
+            text-align: center;
+        }
+        .main-btns {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 2rem;
+            margin: 3rem 0;
+        }
+        .main-btn {
+            background: white;
+            padding: 2rem;
+            border-radius: 10px;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+            cursor: pointer;
+            transition: 0.3s;
+        }
+        .main-btn:hover {
+            transform: translateY(-5px);
+        }
+        /* صفحة الدورات */
+        .courses-page {
+            padding: 2rem;
+        }
+        .course-card {
+            background: white;
+            padding: 1.5rem;
+            margin: 1rem 0;
+            border-radius: 10px;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+            cursor: pointer;
+            transition: 0.3s;
+        }
+        .course-card:hover {
+            transform: scale(1.05);
+        }
+        /* صفحة الأقسام (الفيديوهات، الملفات، الاختبارات) */
+        .sections-page {
+            padding: 2rem;
+            text-align: center;
+        }
+        .section-icons {
+            display: flex;
+            justify-content: center;
+            gap: 2rem;
+            margin-top: 2rem;
+        }
+        .section-icon {
+            background: white;
+            padding: 2rem;
+            border-radius: 10px;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+            cursor: pointer;
+            transition: 0.3s;
+            width: 200px;
+        }
+        .section-icon:hover {
+            transform: scale(1.1);
+        }
+        /* تصميم صفحة الفيديوهات */
+        .content-page {
+            padding: 2rem;
+            text-align: center;
+        }
+        .item-container {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: center;
+            gap: 1rem;
+            margin-top: 2rem;
+        }
+        .item-box {
+            background: white;
+            padding: 1rem;
+            border-radius: 10px;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+            cursor: pointer;
+            transition: 0.3s;
+            width: 150px;
+            text-align: center;
+        }
+        .item-box:hover {
+            transform: scale(1.1);
+        }
+        /* تصميم صفحة الاختبار */
+        .test-container {
+            max-width: 600px;
+            margin: 0 auto;
+            background: white;
+            border-radius: 10px;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+            padding: 2rem;
+        }
+        .question-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 1rem;
+        }
+        .question-number {
+            font-size: 1.2rem;
+            font-weight: bold;
+        }
+        .question-text {
+            font-size: 1.1rem;
+            margin-bottom: 1rem;
+        }
+        .options {
+            margin-bottom: 1rem;
+        }
+        .option {
+            padding: 0.5rem 1rem;
+            margin-bottom: 0.5rem;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+            cursor: pointer;
+            transition: 0.3s;
+        }
+        .option:hover {
+            background: var(--secondary);
+            color: white;
+        }
+        .selected {
+            background: var(--info);
+            color: white;
+        }
+        .correct-answer {
+            background: var(--success);
+            color: white;
+        }
+        .controls {
+            display: flex;
+            gap: 1rem;
+            margin-top: 1rem;
+        }
+        .control-btn {
+            padding: 0.5rem 1rem;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            transition: 0.3s;
+        }
+        .prev-btn {
+            background: var(--primary);
+            color: white;
+        }
+        .next-btn {
+            background: var(--secondary);
+            color: white;
+        }
+        .skip-btn {
+            background: var(--danger);
+            color: white;
+        }
+        .show-answer-btn {
+            background: var(--success);
+            color: white;
+        }
+        .end-test-btn {
+            background: var(--danger);
+            color: white;
+        }
+        .tools {
+            display: flex;
+            gap: 1rem;
+            margin-top: 1rem;
+        }
+        .tool-btn {
+            padding: 0.5rem;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            transition: 0.3s;
+        }
+        .calculator-btn {
+            background: #34495e;
+            color: white;
+        }
+        .whiteboard-btn {
+            background: #e74c3c;
+            color: white;
+        }
+        /* صفحة النتيجة */
+        .result-page {
+            text-align: center;
+            margin-top: 2rem;
+        }
+        .result-message {
+            font-size: 1.2rem;
+            font-weight: bold;
+            margin-bottom: 1rem;
+        }
+        .detailed-report {
+            margin-top: 1rem;
+        }
+        .report-item {
+            margin-bottom: 0.5rem;
+        }
+        /* آلة الحاسبة */
+        #calculator {
+            display: none;
+            position: fixed;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            background: white;
+            padding: 1rem;
+            border-radius: 10px;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+        }
+        #calculator-display {
+            width: 100%;
+            padding: 0.5rem;
+            margin-bottom: 1rem;
+            text-align: right;
+        }
+        .calculator-keys {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 0.5rem;
+        }
+        .calculator-key {
+            padding: 0.5rem;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+            cursor: pointer;
+            transition: 0.3s;
+        }
+        .calculator-key:hover {
+            background: var(--secondary);
+            color: white;
+        }
+        /* السبورة */
+        #whiteboard {
+            display: none;
+            position: fixed;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            background: white;
+            padding: 1rem;
+            border: 2px solid black;
+            border-radius: 10px;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+        }
+        #whiteboard-canvas {
+            border: 1px solid #ccc;
+            width: 100%;
+            height: 300px;
+        }
+        /* صفحة تسجيل الدخول */
+        #login-page {
+            display: none;
+            padding: 2rem;
+            text-align: center;
+        }
+        .login-form {
+            max-width: 400px;
+            margin: 0 auto;
+        }
+        .form-group {
+            margin-bottom: 1rem;
+        }
+        .form-input {
+            width: 100%;
+            padding: 0.5rem;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+        }
+        .submit-btn {
+            padding: 0.5rem 1rem;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            background: var(--secondary);
+            color: white;
+        }
+        /* صفحة التسجيل */
+        #register-page {
+            display: none;
+            padding: 2rem;
+            text-align: center;
+        }
+        /* صفحة التواصل معنا */
+        #contact-page {
+            display: none;
+            padding: 2rem;
+            text-align: center;
+        }
+    </style>
+</head>
+<body>
+    <!-- شريط التنقل -->
+    <nav class="nav-bar">
+        <div class="nav-btn" onclick="showSection('home')">
+            <i class="fas fa-home"></i> الرئيسية
+        </div>
+        <div class="nav-btn" onclick="showSection('courses')">
+            <i class="fas fa-book-open"></i> الدورات
+        </div>
+        <div class="nav-btn" onclick="showSection('login')">
+            <i class="fas fa-sign-in-alt"></i> تسجيل الدخول
+        </div>
+        <div class="nav-btn" onclick="showSection('register')">
+            <i class="fas fa-user-plus"></i> التسجيل
+        </div>
+        <div class="nav-btn" onclick="showSection('contact')">
+            <i class="fas fa-envelope"></i> تواصل معنا
+        </div>
+    </nav>
+    <!-- الصفحة الرئيسية -->
+    <section id="home" class="home-page">
+        <h1>مرحباً بكم في PM NEXT GEN</h1>
+        <p>منصة تعليمية متقدمة لإدارة المشاريع - م. أحمد الديب</p>
+        
+        <div class="main-btns">
+            <div class="main-btn" onclick="showSection('courses')">
+                <i class="fas fa-laptop-code fa-3x"></i>
+                <h3>الدورات التدريبية</h3>
+            </div>
+            
+            <div class="main-btn" onclick="showSection('reviews')">
+                <i class="fas fa-comments fa-3x"></i>
+                <h3>آراء المشتركين</h3>
+            </div>
+        </div>
+        <!-- قسم آراء المشتركين -->
+        <div id="reviews" style="display: none;">
+            <h2>آراء المشتركين في دوراتنا</h2>
+            <div class="reviews-grid">
+                <!-- يتم إضافة الآراء هنا -->
+            </div>
+        </div>
+    </section>
+    <!-- صفحة الدورات -->
+    <section id="courses" class="courses-page">
+        <h2>الدورات المتاحة</h2>
+        
+        <div class="course-card" onclick="showCourseSections(2)">
+            <h3>دورة إدارة المشاريع الاحترافية</h3>
+            <p>متقدم في إدارة المشاريع وفق معايير PMI</p>
+        </div>
+    </section>
+    <!-- صفحة الأقسام (الفيديوهات، الملفات، الاختبارات) -->
+    <section id="course-sections" class="sections-page" style="display: none;">
+        <button onclick="showSection('courses')">العودة للدورات</button>
+        <h2>اختر القسم الذي تريد الاطلاع عليه:</h2>
+        <div class="section-icons">
+            <div class="section-icon" onclick="showContentPage('videos')">
+                <i class="fas fa-play-circle fa-3x"></i>
+                <p>الفيديوهات</p>
+            </div>
+            <div class="section-icon" onclick="showContentPage('materials')">
+                <i class="fas fa-file-alt fa-3x"></i>
+                <p>المواد العلمية</p>
+            </div>
+            <div class="section-icon" onclick="showContentPage('tests')">
+                <i class="fas fa-check-square fa-3x"></i>
+                <p>الاختبارات</p>
+            </div>
+        </div>
+    </section>
+    <!-- صفحة محتوى الفيديوهات -->
+    <section id="videos-page" class="content-page" style="display: none;">
+        <button onclick="showSection('course-sections')">العودة للأقسام</button>
+        <h2>فيديوهات دورة إدارة المشاريع الاحترافية</h2>
+        <div class="item-container" id="videos-list"></div>
+    </section>
+    <!-- صفحة محتوى المواد العلمية -->
+    <section id="materials-page" class="content-page" style="display: none;">
+        <button onclick="showSection('course-sections')">العودة للأقسام</button>
+        <h2>المواد العلمية - دورة إدارة المشاريع الاحترافية</h2>
+        <div class="item-container" id="materials-list"></div>
+    </section>
+    <!-- صفحة محتوى الاختبارات -->
+    <section id="tests-page" class="content-page" style="display: none;">
+        <button onclick="showSection('course-sections')">العودة للأقسام</button>
+        <h2>الاختبارات - دورة إدارة المشاريع الاحترافية</h2>
+        <div class="dropdown">
+            <label for="chapter-tests">اختيار اختبارات الفصول:</label>
+            <select id="chapter-tests" onchange="loadTest(this.value)"></select>
+        </div>
+    </section>
+    <!-- صفحة اختبار الإطار العام -->
+    <div id="general-framework-test" class="test-container" style="display: none;">
+        <button onclick="returnToTests()" style="position: absolute; top: 10px; right: 10px;">إنهاء الاختبار</button>
+        <div class="question-header">
+            <div class="question-number" id="question-number">سؤال 1 من 44</div>
+        </div>
+        <div class="question-text" id="question-text"></div>
+        <div class="options" id="options"></div>
+        <div class="tools">
+            <button class="tool-btn calculator-btn" onclick="toggleCalculator()">آلة حاسبة</button>
+            <button class="tool-btn whiteboard-btn" onclick="toggleWhiteboard()">سبورة</button>
+        </div>
+        <div class="controls" id="controls-container">
+            <button class="control-btn prev-btn" onclick="prevQuestion()" id="prev-btn" disabled><i class="fas fa-arrow-left"></i> السابق</button>
+            <button class="control-btn next-btn" onclick="nextQuestion()" id="next-btn">التالي <i class="fas fa-arrow-right"></i></button>
+            <button class="control-btn skip-btn" onclick="skipQuestion()">تخطي <i class="fas fa-fast-forward"></i></button>
+            <button class="control-btn show-answer-btn" onclick="showAnswer()">إظهار الإجابة الصحيحة <i class="fas fa-check-circle"></i></button>
+        </div>
+        <div id="final-controls" style="display: none; margin-top: 1rem;">
+            <button class="control-btn show-result-btn" onclick="showResults()">إظهار النتيجة <i class="fas fa-chart-bar"></i></button>
+        </div>
+    </div>
+    <!-- صفحة النتائج -->
+    <div id="result-container" class="result-page" style="display: none;">
+        <h2>نتائجك:</h2>
+        <div class="result-message" id="result-message"></div>
+        <div class="detailed-report" id="detailed-report"></div>
+        <button onclick="restartTest()">إعادة الاختبار</button>
+        <button onclick="returnToTests()">الرجوع إلى قائمة الاختبارات</button>
+    </div>
+    <!-- آلة الحاسبة -->
+    <div id="calculator" style="display: none;">
+        <input type="text" id="calculator-display" readonly>
+        <div class="calculator-keys">
+            <button class="calculator-key" onclick="calculatorInput('1')">1</button>
+            <button class="calculator-key" onclick="calculatorInput('2')">2</button>
+            <button class="calculator-key" onclick="calculatorInput('3')">3</button>
+            <button class="calculator-key" onclick="calculatorInput('+')">+</button>
+            <button class="calculator-key" onclick="calculatorInput('4')">4</button>
+            <button class="calculator-key" onclick="calculatorInput('5')">5</button>
+            <button class="calculator-key" onclick="calculatorInput('6')">6</button>
+            <button class="calculator-key" onclick="calculatorInput('-')">-</button>
+            <button class="calculator-key" onclick="calculatorInput('7')">7</button>
+            <button class="calculator-key" onclick="calculatorInput('8')">8</button>
+            <button class="calculator-key" onclick="calculatorInput('9')">9</button>
+            <button class="calculator-key" onclick="calculatorInput('*')">*</button>
+            <button class="calculator-key" onclick="calculatorInput('C')">C</button>
+            <button class="calculator-key" onclick="calculatorInput('0')">0</button>
+            <button class="calculator-key" onclick="calculatorInput('.')">.</button>
+            <button class="calculator-key" onclick="calculatorInput('/')">/</button>
+            <button class="calculator-key" onclick="calculateResult()" style="grid-column: span 2;">=</button>
+        </div>
+        <button onclick="closeCalculator()" style="margin-top: 1rem;">إغلاق</button>
+    </div>
+    <!-- السبورة -->
+    <div id="whiteboard" style="display: none;">
+        <canvas id="whiteboard-canvas" width="400" height="300"></canvas>
+        <div style="display: flex; gap: 1rem; margin-top: 1rem;">
+            <button onclick="usePen()">قلم</button>
+            <button onclick="useEraser()">ممحاة</button>
+            <button onclick="clearWhiteboard()">مسح الكل</button>
+        </div>
+        <button onclick="closeWhiteboard()" style="margin-top: 1rem;">إغلاق</button>
+    </div>
+    <!-- صفحة تسجيل الدخول -->
+    <section id="login-page" style="display: none;">
+        <h2>تسجيل الدخول</h2>
+        <form class="login-form" onsubmit="return login(event)">
+            <div class="form-group">
+                <label for="username">اسم المستخدم:</label>
+                <input type="text" id="username" class="form-input" required>
+            </div>
+            <div class="form-group">
+                <label for="password">كلمة المرور:</label>
+                <input type="password" id="password" class="form-input" required>
+            </div>
+            <button type="submit" class="submit-btn">تسجيل الدخول</button>
+        </form>
+    </section>
+    <!-- صفحة التسجيل -->
+    <section id="register-page" style="display: none;">
+        <h2>التسجيل</h2>
+        <form class="login-form" onsubmit="return register(event)">
+            <div class="form-group">
+                <label for="new-username">اسم المستخدم:</label>
+                <input type="text" id="new-username" class="form-input" required>
+            </div>
+            <div class="form-group">
+                <label for="new-password">كلمة المرور:</label>
+                <input type="password" id="new-password" class="form-input" required>
+            </div>
+            <button type="submit" class="submit-btn">إنشاء حساب</button>
+        </form>
+    </section>
+    <!-- صفحة التواصل معنا -->
+    <section id="contact-page" style="display: none;">
+        <h2>تواصل معنا</h2>
+        <form class="login-form" onsubmit="return contactUs(event)">
+            <div class="form-group">
+                <label for="name">الاسم:</label>
+                <input type="text" id="name" class="form-input" required>
+            </div>
+            <div class="form-group">
+                <label for="email">البريد الإلكتروني:</label>
+                <input type="email" id="email" class="form-input" required>
+            </div>
+            <div class="form-group">
+                <label for="message">الرسالة:</label>
+                <textarea id="message" class="form-input" rows="4" required></textarea>
+            </div>
+            <button type="submit" class="submit-btn">إرسال</button>
+        </form>
+    </section>
+    <script>
+        // بيانات أسئلة اختبار الإطار العام
+        const generalFrameworkTest = [
+            {
+                question: "مدير المشروع مطلع جيداً على معايير الصناعة الخاصة بالمنظمة ويعتقد أنها لا تنعكس في مخرجات المشروع. ما الذي يجب على مدير المشروع مراجعته بعد ذلك؟",
+                options: ["خطة إدارة الجودة", "عملية الجودة", "ميثاق المشروع", "أصول العمليات التنظيمية (OPAs)"],
+                answer: "أصول العمليات التنظيمية (OPAs)"
+            },
+            {
+                question: "تستخدم منظمة نهج تسليم مختلط لمشروع تجاري. تم ترقية صاحب المنتج، الشخص الذي كان يدير المشروع أيضاً، إلى دور أكثر أقدمية. انضم قائد مشروع جديد إلى المشروع. أي وثيقة يجب على قائد المشروع استخدامها لضمان تحديد فوائد المشروع؟",
+                options: ["حالة العمل (دراسة الجدوى)", "بيان العمل (SOW)", "مخطط باريتو", "سجل المنتج"],
+                answer: "حالة العمل (دراسة الجدوى)"
+            },
+            {
+                question: "أعد مدير المشروع خطة إدارة فوائد المشروع. ما الذي يجب أن يتضمنه هذا الوثيقة؟",
+                options: [
+                    "الفوائد المستهدفة، مالك الفوائد، الدروس المستفادة",
+                    "الفوائد المستهدفة، التوافق الاستراتيجي، الإطار الزمني لتحقيق الفوائد",
+                    "التوافق الاستراتيجي، مالك الفوائد، سجل المخاطر",
+                    "متطلبات المشروع، الفوائد المستهدفة، سجل المشكلات، المقاييس"
+                ],
+                answer: "الفوائد المستهدفة، التوافق الاستراتيجي، الإطار الزمني لتحقيق الفوائد"
+            },
+            {
+                question: "فريق المشروع يعد تقريراً لأصحاب المصلحة. يجمع الفريق وينسق كمية كبيرة من البيانات لتضمينها في التقرير الحالي. ما الذي يجب على مدير المشروع القيام به بعد ذلك؟",
+                options: [
+                    "التأكد من اتباع الفريق للإجراءات التشغيلية القياسية (SOP) لإنشاء تقرير لأصحاب المصلحة.",
+                    "توجيه الفريق لعمل تمثيل بياني فقط لجميع البيانات للتقرير.",
+                    "توجيه الفريق لتحليل وتفسير البيانات قبل تضمينها في التقرير.",
+                    "توجيه الفريق لعقد اجتماع مع أصحاب المصلحة قبل الانتهاء من التقرير."
+                ],
+                answer: "توجيه الفريق لتحليل وتفسير البيانات قبل تضمينها في التقرير."
+            },
+            {
+                question: "أنت مدير مشروع في مشروع بناء. ما الذي يجب عليك القيام به لضمان تسليم المشروع بنجاح؟",
+                options: [
+                    "الاجتماع مع أصحاب المصلحة للتواصل بشأن الميزانية والتكلفة وتأثير التأخير في حال حدوثه.",
+                    "إجراء نشاط لبناء الفريق",
+                    "تحديد مخاطر المشروع ومعايير النجاح اللازمة.",
+                    "إنشاء احتياطي إداري للتعامل مع المخاطر المجهولة عند حدوثها"
+                ],
+                answer: "تحديد مخاطر المشروع ومعايير النجاح اللازمة."
+            },
+            {
+                question: "مشروع متعدد المراحل تم تنفيذه بموارد داخلية وقد وصل إلى نقطة فحص. يريد أصحاب المصلحة الرئيسيون تحديد ما إذا كانت المرحلة قد حققت معايير النجاح الخاصة بها، وما إذا كان ينبغي أن يتقدم المشروع إلى المرحلة التالية. بالإضافة إلى خطة إدارة المشروع، أي الوثائق ستكون مطلوبة؟",
+                options: [
+                    "سجل المخاطر وتقرير المخاطر",
+                    "سجل الدروس المستفادة ومستودع الدروس المستفادة",
+                    "الوثائق التجارية وميثاق المشروع",
+                    "الاتفاقيات بما في ذلك عقود الشراء"
+                ],
+                answer: "الوثائق التجارية وميثاق المشروع"
+            },
+            {
+                question: "طُلب من مدير المشروع المساهمة في وثيقة لوصف ما يُقصد بتحقيقه بمجرد الانتهاء من المشروع بنجاح، وكيف سيتم قياس ذلك. ماذا قد يكون اسم تلك الوثيقة؟",
+                options: ["خطة إدارة الفوائد", "بيان العمل", "خطة إدارة التغيير", "خطة إدارة المشروع"],
+                answer: "خطة إدارة الفوائد"
+            },
+            {
+                question: "أي من التقنيات التالية يمكن أن تضمن أن أصحاب المصلحة مشاركون في المراحل المناسبة من المشروع وللحصول على تأكيد استمرار التزامهم بنجاح المشروع؟",
+                options: ["تحديد قواعد الأساس", "اجتماعات بوابة المرحلة", "إدارة فريق المشروع", "التدقيقات الأدائية"],
+                answer: "اجتماعات بوابة المرحلة"
+            },
+            {
+                question: "أنت مدير مشروع HM. يجب أن يكتمل مشروعك بحلول 11 سبتمبر ولا يتجاوز 10000 دولار. 10000 دولار هو مثال على أي من الأتي؟",
+                options: ["تاريخ الانتهاء المجدول", "قيد", "افتراض", "احتياطي الإدارة"],
+                answer: "قيد"
+            },
+            {
+                question: "أخبرك أعضاء فريقك أنهم مثقلون بالعديد من المهام. يقولون إن لديهم العديد من المهام الموكلة إليهم بجانب المهام الرئيسية في المشروع. وعدتهم بأنك ستخفف من المهام المثقلة. أنت مدير مشروع في:",
+                options: ["منظمة مشروعية", "منظمة ضعيفة المصفوفة", "منظمة قوية المصفوفة", "منظمة متوازنة المصفوفة"],
+                answer: "منظمة قوية المصفوفة"
+            }
+            // ... يمكنك إضافة المزيد من الأسئلة بنفس الشكل
+        ];
+
+        // دالة إدارة العرض
+        function showSection(sectionId) {
+            document.querySelectorAll('section').forEach(section => section.style.display = 'none');
+            if (sectionId === 'home') {
+                document.getElementById('home').style.display = 'block';
+            } else if (sectionId === 'courses') {
+                document.getElementById('courses').style.display = 'block';
+            } else if (sectionId === 'login') {
+                document.getElementById('login-page').style.display = 'block';
+            } else if (sectionId === 'register') {
+                document.getElementById('register-page').style.display = 'block';
+            } else if (sectionId === 'contact') {
+                document.getElementById('contact-page').style.display = 'block';
+            }
+        }
+
+        // عرض صفحة الأقسام (الفيديوهات، الملفات، الاختبارات)
+        function showCourseSections(courseId) {
+            document.getElementById('course-sections').style.display = 'block';
+        }
+
+        // عرض صفحة محتوى القسم المحدد
+        function showContentPage(contentType) {
+            document.querySelectorAll('.content-page').forEach(page => page.style.display = 'none');
+
+            if (contentType === 'videos') {
+                updateVideosContent();
+                document.getElementById('videos-page').style.display = 'block';
+            } else if (contentType === 'materials') {
+                updateMaterialsContent();
+                document.getElementById('materials-page').style.display = 'block';
+            } else if (contentType === 'tests') {
+                updateTestsContent();
+                document.getElementById('tests-page').style.display = 'block';
+            }
+        }
+
+        // تحديث محتوى الفيديوهات
+        function updateVideosContent() {
+            const videosList = document.getElementById('videos-list');
+            videosList.innerHTML = '';
+            const videos = ['فيديو 1', 'فيديو 2', 'فيديو 3', 'فيديو 4', 'فيديو 5', 'فيديو 6', 'فيديو 7', 'فيديو 8', 'فيديو 9', 'فيديو 10'];
+            videos.forEach(video => {
+                const videoBox = document.createElement('div');
+                videoBox.className = 'item-box';
+                videoBox.innerHTML = `<i class="fas fa-play-circle fa-2x"></i><p>${video}</p>`;
+                videosList.appendChild(videoBox);
+            });
+        }
+
+        // تحديث محتوى المواد العلمية
+        function updateMaterialsContent() {
+            const materialsList = document.getElementById('materials-list');
+            materialsList.innerHTML = '';
+            const materials = ['ملف PDF 1', 'ملف PDF 2', 'ملف PDF 3', 'ملف PDF 4', 'ملف PDF 5', 'ملف PDF 6', 'ملف PDF 7'];
+            materials.forEach(material => {
+                const materialBox = document.createElement('div');
+                materialBox.className = 'item-box';
+                materialBox.innerHTML = `<i class="fas fa-file-pdf fa-2x"></i><p>${material}</p>`;
+                materialsList.appendChild(materialBox);
+            });
+        }
+
+        // تحديث محتوى الاختبارات
+        function updateTestsContent() {
+            const chapterTestsSelect = document.getElementById('chapter-tests');
+            chapterTestsSelect.innerHTML = '';
+            const defaultOption = document.createElement('option');
+            defaultOption.value = '';
+            defaultOption.text = 'اختر اختباراً';
+            chapterTestsSelect.add(defaultOption);
+            const chapterTests = ['اختبار الإطار العام', 'اختبار منهجية الرشيقة', 'اختبار مجال الأشخاص'];
+            chapterTests.forEach(test => {
+                const option = document.createElement('option');
+                option.value = test;
+                option.text = test;
+                chapterTestsSelect.add(option);
+            });
+        }
+
+        // تحميل اختبار الإطار العام
+        function loadTest(testName) {
+            if (testName === 'اختبار الإطار العام') {
+                startTest(generalFrameworkTest);
+            }
+        }
+
+        // بدء الاختبار
+        let currentQuestionIndex = 0;
+        let score = 0;
+        let selectedAnswers = [];
+
+        function startTest(questions) {
+            document.getElementById('general-framework-test').style.display = 'block';
+            document.getElementById('tests-page').style.display = 'none';
+            questions = questions || generalFrameworkTest;
+            loadQuestion(0, questions);
+        }
+
+        // عرض السؤال الحالي
+        function loadQuestion(index, questions) {
+            const questionData = questions[index];
+            document.getElementById('question-number').textContent = `سؤال ${index + 1} من ${questions.length}`;
+            document.getElementById('question-text').textContent = questionData.question;
+            const optionsContainer = document.getElementById('options');
+            optionsContainer.innerHTML = '';
+            questionData.options.forEach(option => {
+                const optionElement = document.createElement('div');
+                optionElement.className = 'option';
+                optionElement.textContent = option;
+                optionElement.onclick = () => selectOption(optionElement, option);
+                optionsContainer.appendChild(optionElement);
+            });
+
+            // تحديث زر "إظهار النتيجة" عند الوصول إلى آخر سؤال
+            if (index === questions.length - 1) {
+                document.getElementById('final-controls').style.display = 'flex';
+                document.getElementById('next-btn').style.display = 'none';
+            } else {
+                document.getElementById('final-controls').style.display = 'none';
+                document.getElementById('next-btn').style.display = 'inline-block';
+            }
+
+            updateControls();
+        }
+
+        // اختيار الإجابة
+        function selectOption(element, option) {
+            const options = document.querySelectorAll('.option');
+            options.forEach(opt => opt.classList.remove('selected', 'correct-answer'));
+            element.classList.add('selected');
+            selectedAnswers[currentQuestionIndex] = option;
+        }
+
+        // التنقل إلى السؤال التالي
+        function nextQuestion() {
+            if (currentQuestionIndex < generalFrameworkTest.length - 1) {
+                currentQuestionIndex++;
+                loadQuestion(currentQuestionIndex, generalFrameworkTest);
+            } else {
+                showResults();
+            }
+        }
+
+        // الرجوع إلى السؤال السابق
+        function prevQuestion() {
+            if (currentQuestionIndex > 0) {
+                currentQuestionIndex--;
+                loadQuestion(currentQuestionIndex, generalFrameworkTest);
+            }
+        }
+
+        // تخطي السؤال
+        function skipQuestion() {
+            if (currentQuestionIndex < generalFrameworkTest.length - 1) {
+                currentQuestionIndex++;
+                loadQuestion(currentQuestionIndex, generalFrameworkTest);
+            } else {
+                showResults();
+            }
+        }
+
+        // إظهار الإجابة الصحيحة
+        function showAnswer() {
+            const correctAnswer = generalFrameworkTest[currentQuestionIndex].answer;
+            const options = document.querySelectorAll('.option');
+            options.forEach(option => {
+                if (option.textContent.includes(correctAnswer)) {
+                    option.classList.add('correct-answer');
+                }
+            });
+        }
+
+        // تحديث أزرار التنقل
+        function updateControls() {
+            document.getElementById('prev-btn').disabled = currentQuestionIndex === 0;
+        }
+
+        // إنهاء الاختبار
+        function returnToTests() {
+            document.getElementById('general-framework-test').style.display = 'none';
+            document.getElementById('tests-page').style.display = 'block';
+            clearInterval(timer); // إيقاف المؤقت (إن وجد)
+        }
+
+               // ... (استمرار الكود السابق)
+
+        // عرض النتائج
+        function showResults() {
+            document.getElementById('general-framework-test').style.display = 'none';
+            document.getElementById('result-container').style.display = 'block';
+
+            // حساب النتيجة
+            score = 0;
+            const detailedReport = document.getElementById('detailed-report');
+            detailedReport.innerHTML = '';
+            
+            generalFrameworkTest.forEach((q, index) => {
+                const isCorrect = selectedAnswers[index] === q.answer;
+                if (isCorrect) score++;
+                
+                const reportItem = document.createElement('div');
+                reportItem.className = 'report-item';
+                reportItem.innerHTML = `
+                    <p><strong>السؤال ${index + 1}:</strong> ${q.question}</p>
+                    <p class="${isCorrect ? 'correct-answer' : 'selected'}">إجابتك: ${selectedAnswers[index] || 'لم تجب'}</p>
+                    <p class="correct-answer">الإجابة الصحيحة: ${q.answer}</p>
+                    <hr>
+                `;
+                detailedReport.appendChild(reportItem);
+            });
+
+            const percentage = ((score / generalFrameworkTest.length) * 100).toFixed(1);
+            const resultMessage = document.getElementById('result-message');
+            resultMessage.innerHTML = `
+                <p>إجمالي الإجابات الصحيحة: ${score}/${generalFrameworkTest.length}</p>
+                <p>النسبة المئوية: ${percentage}%</p>
+                <p>${percentage >= 70 ? 'مبروك! لقد نجحت في الاختبار 🎉' : 'عذراً، تحتاج إلى إعادة الاختبار 💪'}</p>
+            `;
+        }
+
+        // إعادة الاختبار
+        function restartTest() {
+            currentQuestionIndex = 0;
+            score = 0;
+            selectedAnswers = [];
+            document.getElementById('result-container').style.display = 'none';
+            startTest(generalFrameworkTest);
+        }
+
+        // العودة إلى الاختبارات
+        function returnToTests() {
+            document.getElementById('general-framework-test').style.display = 'none';
+            document.getElementById('result-container').style.display = 'none';
+            document.getElementById('tests-page').style.display = 'block';
+            currentQuestionIndex = 0;
+            score = 0;
+            selectedAnswers = [];
+        }
+
+        // إدارة الآلة الحاسبة
+        let calculatorValue = '';
+
+        function calculatorInput(value) {
+            if (value === 'C') {
+                calculatorValue = '';
+            } else {
+                calculatorValue += value;
+            }
+            document.getElementById('calculator-display').value = calculatorValue;
+        }
+
+        function calculateResult() {
+            try {
+                calculatorValue = eval(calculatorValue).toString();
+                document.getElementById('calculator-display').value = calculatorValue;
+            } catch {
+                calculatorValue = '';
+                document.getElementById('calculator-display').value = 'خطأ';
+            }
+        }
+
+        function toggleCalculator() {
+            const calculator = document.getElementById('calculator');
+            calculator.style.display = calculator.style.display === 'block' ? 'none' : 'block';
+        }
+
+        function closeCalculator() {
+            document.getElementById('calculator').style.display = 'none';
+        }
+
+        // إدارة السبورة
+        let isDrawing = false;
+        let lastX = 0;
+        let lastY = 0;
+        let tool = 'pen';
+        const canvas = document.getElementById('whiteboard-canvas');
+        const ctx = canvas.getContext('2d');
+        ctx.lineWidth = 2;
+        ctx.strokeStyle = '#000000';
+
+        function usePen() {
+            tool = 'pen';
+            ctx.globalCompositeOperation = 'source-over';
+            ctx.strokeStyle = '#000000';
+        }
+
+        function useEraser() {
+            tool = 'eraser';
+            ctx.globalCompositeOperation = 'destination-out';
+        }
+
+        function clearWhiteboard() {
+            ctx.clearRect(0, 0, canvas.width, canvas.height);
+        }
+
+        function toggleWhiteboard() {
+            const whiteboard = document.getElementById('whiteboard');
+            whiteboard.style.display = whiteboard.style.display === 'block' ? 'none' : 'block';
+        }
+
+        function closeWhiteboard() {
+            document.getElementById('whiteboard').style.display = 'none';
+        }
+
+        // أحداث السبورة
+        canvas.addEventListener('mousedown', startDrawing);
+        canvas.addEventListener('mousemove', draw);
+        canvas.addEventListener('mouseup', stopDrawing);
+        canvas.addEventListener('mouseout', stopDrawing);
+
+        function startDrawing(e) {
+            isDrawing = true;
+            [lastX, lastY] = [e.offsetX, e.offsetY];
+        }
+
+        function draw(e) {
+            if (!isDrawing) return;
+            ctx.beginPath();
+            ctx.moveTo(lastX, lastY);
+            ctx.lineTo(e.offsetX, e.offsetY);
+            ctx.stroke();
+            [lastX, lastY] = [e.offsetX, e.offsetY];
+        }
+
+        function stopDrawing() {
+            isDrawing = false;
+        }
+
+        // إدارة تسجيل الدخول والتسجيل
+        function login(event) {
+            event.preventDefault();
+            const username = document.getElementById('username').value;
+            const password = document.getElementById('password').value;
+            // يمكن إضافة التحقق من قاعدة البيانات هنا
+            alert('تم تسجيل الدخول بنجاح!');
+            showSection('home');
+        }
+
+        function register(event) {
+            event.preventDefault();
+            const username = document.getElementById('new-username').value;
+            const password = document.getElementById('new-password').value;
+            // يمكن إضافة حفظ البيانات هنا
+            alert('تم إنشاء الحساب بنجاح!');
+            showSection('login');
+        }
+
+        function contactUs(event) {
+            event.preventDefault();
+            const name = document.getElementById('name').value;
+            const email = document.getElementById('email').value;
+            const message = document.getElementById('message').value;
+            // يمكن إضافة إرسال الرسالة هنا
+            alert('تم إرسال رسالتك بنجاح!');
+            showSection('home');
+        }
+
+        // تهيئة أولية
+        showSection('home');
+        updateVideosContent();
+        updateMaterialsContent();
+        updateTestsContent();
+    </script>
+</body>
+</html>
